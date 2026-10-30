@@ -1,0 +1,335 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+:root {
+  color-scheme: dark;
+
+  /* Cores */
+  --bg: #0a0c0f;
+  --bg-raised: #10141a;
+  --surface: #141a21;
+  --line: #222b35;
+  --line-strong: #33404d;
+  --text: #e9eef3;
+  --text-muted: #9aa7b4;
+  --text-faint: #6c7a88;
+  --ice: #bcd8ea;
+  --accent: #5fe3e8;
+  --accent-ink: #04191a;
+  --ok: #7be3a4;
+  --warn: #f2c66d;
+
+  /* Tipografia */
+  --font-sans: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --fs-mono: 0.75rem;
+  --fs-small: 0.875rem;
+  --fs-body: 1.0625rem;
+  --fs-lead: clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem);
+  --fs-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-h2: clamp(2.5rem, 1.6rem + 4vw, 5.5rem);
+  --fs-display: clamp(3.4rem, 1.4rem + 9.5vw, 10.5rem);
+
+  /* Espaço */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --max: 1320px;
+  --section: clamp(6rem, 4rem + 8vw, 11rem);
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur: 320ms;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Etiqueta técnica em fonte mono */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.02em;
+  font-weight: 450;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ice);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.h2 {
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section);
+}
+
+.section-head {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.85rem 1.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+  touch-action: manipulation;
+}
+
+.btn:hover {
+  border-color: var(--ice);
+  background: rgb(188 216 234 / 0.06);
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn--primary:hover {
+  background: #8ff0f3;
+  border-color: #8ff0f3;
+}
+
+.btn svg {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+/* Ruído sutil sobre tudo, dá textura ao fundo plano */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Estado inicial das revelações animadas; só aplicado quando o JS de animação está ativo */
+.js-motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* Entrada do herói em CSS puro: começa na primeira pintura, sem esperar o JavaScript */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-title] .line__inner {
+    animation: rise-line 1.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.1s;
+  }
+
+  [data-hero-title] .line:nth-child(2) .line__inner {
+    animation-delay: 0.22s;
+  }
+
+  [data-hero-item] {
+    animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.45s + var(--i, 0) * 0.08s);
+  }
+}
+
+@keyframes rise-line {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Etiquetas da cena 3D, criadas pelo script da cena */
+.hud-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.hud-label__dot {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: rgb(95 227 232 / 0.25);
+}
+
+.hud-label__line {
+  position: absolute;
+  left: 3px;
+  top: -1px;
+  width: 44px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), rgb(188 216 234 / 0.6));
+  transform: rotate(-38deg);
+  transform-origin: left center;
+}
+
+.hud-label__text {
+  position: absolute;
+  left: 36px;
+  top: -44px;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid rgb(188 216 234 / 0.25);
+  border-radius: 2px;
+  background: rgb(10 12 15 / 0.72);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+  white-space: pre;
+}
+
+.hud-label.is-flip .hud-label__line {
+  left: -3px;
+  transform: rotate(-142deg);
+}
+
+.hud-label.is-flip .hud-label__text {
+  left: auto;
+  right: 36px;
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
+<defs>
+<pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#1a222b" stroke-width="1"/></pattern>
+<linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10141a"/><stop offset="1" stop-color="#0a0c0f"/></linearGradient>
+</defs>
+<rect width="1200" height="750" fill="url(#v)"/>
+<rect width="1200" height="750" fill="url(#g)"/>
+<rect x="0" y="0" width="1200" height="56" fill="#141a21"/>
+<circle cx="32" cy="28" r="6" fill="#33404d"/><circle cx="54" cy="28" r="6" fill="#33404d"/><circle cx="76" cy="28" r="6" fill="#33404d"/>
+<g font-family="JetBrains Mono, Consolas, monospace" font-size="22">
+<text x="110" y="35" fill="#6c7a88" font-size="18">lab_02 — terminal</text>
+
+<text x="64" y="176" fill="#6c7a88" font-size="18">placeholder · substituir por captura real</text>
+<text x="64" y="250" fill="#5fe3e8">$ chmod 400 labsuser.pem</text><text x="64" y="296" fill="#5fe3e8">$ ssh -i labsuser.pem ec2-user@&lt;ip-publico&gt;</text><text x="64" y="342" fill="#5fe3e8">[ec2-user@ip-10-0-1-12 ~]$ sudo systemctl start httpd</text><text x="64" y="388" fill="#5fe3e8">[ec2-user@ip-10-0-1-12 ~]$ systemctl is-active httpd</text><text x="64" y="434" fill="#9aa7b4">  active</text><text x="64" y="480" fill="#9aa7b4"></text>
+</g>
+<rect x="64" y="560" width="14" height="26" fill="#5fe3e8"/>
+</svg>

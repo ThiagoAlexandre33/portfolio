@@ -1,0 +1,375 @@
+---
+import { content, profile, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+---
+
+<section class="journey" data-journey aria-label={t.chapters.eyebrow}>
+  <div class="stage" data-stage>
+    <canvas class="stage__canvas" data-scene-canvas aria-hidden="true"></canvas>
+    <div class="stage__hud" data-hud aria-hidden="true"></div>
+
+    <!-- Ilustração estática: aparece sem JavaScript, sem WebGL ou com economia de dados -->
+    <svg class="stage__poster" viewBox="0 0 600 520" role="img" aria-label={t.scene.alt}>
+      <defs>
+        <linearGradient id="pf" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5fe3e8" stop-opacity=".35" />
+          <stop offset="1" stop-color="#5fe3e8" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke-linejoin="round">
+        <path d="M300 470 60 350 300 230 540 350Z" stroke="#33404d" />
+        <path d="M300 430 110 335 300 240 490 335Z" stroke="#bcd8ea" stroke-opacity=".55" stroke-dasharray="4 6" />
+        <path d="M215 360 140 322 215 284 290 322Z" stroke="#5fe3e8" fill="url(#pf)" />
+        <path d="M385 360 310 322 385 284 460 322Z" stroke="#bcd8ea" stroke-opacity=".8" />
+        <g stroke="#e9eef3" stroke-opacity=".85" fill="#141a21">
+          <path d="M200 318l-22-11v-26l22 11 22-11v26z" />
+          <path d="M178 281l22-11 22 11-22 11z" />
+          <path d="M370 318l-22-11v-26l22 11 22-11v26z" />
+          <path d="M348 281l22-11 22 11-22 11z" />
+        </g>
+        <path d="M300 236V150" stroke="#5fe3e8" stroke-dasharray="2 5" />
+        <path d="M232 132c-24 0-38-16-38-34s16-33 36-33c8-26 30-40 56-40 32 0 54 22 58 50 22 2 38 16 38 32 0 15-14 25-30 25Z" stroke="#e9eef3" stroke-opacity=".9" fill="#10141a" />
+      </g>
+    </svg>
+  </div>
+
+  <div class="journey__content">
+    <header class="hero wrap" id="conteudo">
+      <p class="hero__status mono" data-hero-item>
+        <span class="pulse" aria-hidden="true"></span>{t.hero.status}
+      </p>
+
+      <h1 class="hero__title" data-hero-title>
+        <span class="line"><span class="line__inner">{t.hero.titleTop}</span></span>
+        <span class="line"><span class="line__inner">{t.hero.titleBottom}</span></span>
+      </h1>
+
+      <div class="hero__body">
+        <p class="hero__role" data-hero-item style="--i:1">{t.hero.role}</p>
+        <p class="hero__lead" data-hero-item style="--i:2">{t.hero.lead}</p>
+        <div class="hero__actions" data-hero-item style="--i:3">
+          <a class="btn btn--primary" href="#laboratorios">
+            {t.hero.ctaPrimary}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+          </a>
+          <a class="btn" href={profile.resume} download>
+            {t.hero.ctaSecondary}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+          </a>
+        </div>
+      </div>
+
+      <p class="hero__scroll mono" data-hero-item style="--i:4">
+        <span class="hero__scroll-line" aria-hidden="true"></span>{t.hero.scroll}
+      </p>
+    </header>
+
+    <div id="trajetoria" class="chapters">
+      {t.chapters.items.map((c, i) => (
+        <article class="chapter wrap" data-chapter={i}>
+          <div class="chapter__card" data-reveal>
+            <p class="chapter__tag mono">
+              <span class="chapter__dot" aria-hidden="true"></span>{c.tag}
+            </p>
+            <h2 class="chapter__title">{c.title}</h2>
+            <p class="chapter__text">{c.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <ol class="progress" aria-hidden="true" data-progress>
+    {t.chapters.items.map(() => <li></li>)}
+  </ol>
+</section>
+
+<style>
+  .journey {
+    position: relative;
+  }
+
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100lvh;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 50% at 68% 38%, rgb(95 227 232 / 0.08), transparent 70%),
+      radial-gradient(80% 60% at 50% 110%, rgb(188 216 234 / 0.06), transparent 70%),
+      var(--bg);
+  }
+
+  .stage__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+
+  .stage__hud {
+    position: absolute;
+    inset: 0;
+  }
+
+  .stage__poster {
+    position: absolute;
+    right: max(var(--gutter), 4vw);
+    top: 50%;
+    width: min(46vw, 560px);
+    transform: translateY(-50%);
+    opacity: 0.9;
+    transition: opacity 0.8s ease;
+  }
+
+  :global(.scene-ready) .stage__canvas {
+    opacity: 1;
+  }
+
+  :global(.scene-ready) .stage__poster {
+    opacity: 0;
+  }
+
+  .journey__content {
+    position: relative;
+    z-index: 1;
+    margin-top: -100vh;
+    margin-top: -100lvh;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 7rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ok);
+  }
+
+  .pulse {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .pulse::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--ok);
+    animation: ping 2.4s var(--ease-out) infinite;
+  }
+
+  @keyframes ping {
+    from { transform: scale(0.6); opacity: 1; }
+    to { transform: scale(2.2); opacity: 0; }
+  }
+
+  .hero__title {
+    align-self: end;
+    margin-top: 2rem;
+    font-size: var(--fs-display);
+    font-weight: 850;
+    font-stretch: 68%;
+    line-height: 0.84;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+  }
+
+  .line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+  }
+
+  .line__inner {
+    display: block;
+  }
+
+  .hero__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem 3rem;
+    margin-top: clamp(1.75rem, 1rem + 2vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero__role {
+    font-weight: 600;
+    color: var(--ice);
+  }
+
+  .hero__lead {
+    max-width: 52ch;
+    color: var(--text-muted);
+    font-size: var(--fs-lead);
+  }
+
+  .hero__actions {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero__scroll {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+    color: var(--text-faint);
+  }
+
+  .hero__scroll-line {
+    position: relative;
+    width: 3rem;
+    height: 1px;
+    overflow: hidden;
+    background: var(--line-strong);
+  }
+
+  .hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    animation: scan 2.2s var(--ease-out) infinite;
+  }
+
+  @keyframes scan {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+
+  /* CAPÍTULOS */
+  .chapter {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-block: 6rem;
+  }
+
+  .chapter__card {
+    max-width: 30rem;
+    padding: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+    background: linear-gradient(180deg, rgb(16 20 26 / 0.82), rgb(10 12 15 / 0.66));
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .chapter__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--accent);
+  }
+
+  .chapter__dot {
+    width: 6px;
+    height: 6px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+  }
+
+  .chapter__title {
+    margin-top: 1.25rem;
+    font-size: clamp(2.2rem, 1.5rem + 3vw, 3.8rem);
+    font-weight: 800;
+    font-stretch: 70%;
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .chapter__text {
+    margin-top: 1.25rem;
+    color: var(--text-muted);
+  }
+
+  /* Indicador lateral de capítulo */
+  .progress {
+    position: fixed;
+    right: clamp(0.75rem, 2vw, 1.75rem);
+    top: 50%;
+    z-index: 5;
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity var(--dur) ease;
+  }
+
+  .progress.is-visible {
+    opacity: 1;
+  }
+
+  .progress li {
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--text-faint);
+    border-radius: 50%;
+    transition: background-color var(--dur) ease, border-color var(--dur) ease, transform var(--dur) var(--ease-out);
+  }
+
+  .progress li.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.4);
+  }
+
+  @media (max-width: 900px) {
+    .stage__poster {
+      top: 18%;
+      right: 50%;
+      width: min(88vw, 420px);
+      transform: translateX(50%);
+      opacity: 0.35;
+    }
+
+    .hero__body {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__actions {
+      grid-column: auto;
+    }
+
+    .chapter {
+      align-items: flex-end;
+    }
+
+    .progress {
+      display: none;
+    }
+  }
+</style>

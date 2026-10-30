@@ -1,0 +1,189 @@
+---
+import { content, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const edu = content[lang].education;
+const exp = content[lang].experience;
+---
+
+<section class="section bg" id="formacao" aria-labelledby="edu-title">
+  <div class="wrap cols">
+    <div>
+      <div class="section-head">
+        <p class="eyebrow mono" data-reveal>{edu.eyebrow}</p>
+        <h2 class="h2" id="edu-title" data-reveal>{edu.title}</h2>
+      </div>
+
+      <ul class="edu" role="list">
+        {edu.items.map((e) => (
+          <li class="edu__item" data-reveal>
+            <p class="edu__org mono">{e.org}</p>
+            <p class="edu__name">{e.name}</p>
+            <p class="edu__meta">
+              <span class={`badge badge--${e.kind}`}>{e.state}</span>
+              <span class="edu__when">{e.when}</span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div id="experiencia">
+      <div class="section-head">
+        <p class="eyebrow mono" data-reveal>{exp.eyebrow}</p>
+        <h2 class="h2" data-reveal>{exp.title}</h2>
+      </div>
+
+      <ol class="timeline" role="list">
+        {exp.items.map((x) => (
+          <li class="job" data-reveal>
+            <p class="job__when mono">{x.when}</p>
+            <h3 class="job__role">{x.role}</h3>
+            <p class="job__org">{x.org}</p>
+            <ul class="job__points">
+              {x.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(4rem, 2rem + 5vw, 7rem);
+  }
+
+  .cols .h2 {
+    font-size: clamp(2.4rem, 1.6rem + 2.8vw, 4rem);
+  }
+
+  .edu__item {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .edu__org {
+    color: var(--text-faint);
+  }
+
+  .edu__name {
+    font-size: 1.15rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+
+  .edu__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+    font-size: var(--fs-small);
+    color: var(--text-muted);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .badge--done { color: var(--ok); }
+  .badge--progress { color: var(--accent); }
+  .badge--planned { color: var(--warn); }
+
+  .timeline {
+    position: relative;
+    padding: 0 0 0 1.75rem;
+    margin: 0;
+    list-style: none;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: linear-gradient(var(--accent), var(--line) 60%);
+  }
+
+  .job {
+    position: relative;
+    padding-bottom: 2.75rem;
+  }
+
+  .job::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.75rem);
+    top: 0.45rem;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--accent);
+  }
+
+  .job:first-child::before {
+    background: var(--accent);
+  }
+
+  .job__when {
+    color: var(--ice);
+  }
+
+  .job__role {
+    margin-top: 0.5rem;
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .job__org {
+    color: var(--text-muted);
+  }
+
+  .job__points {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding-left: 1.1rem;
+    color: var(--text-muted);
+    font-size: 0.975rem;
+  }
+
+  .job__points li::marker {
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

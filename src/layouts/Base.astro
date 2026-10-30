@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import { content, profile, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const path = lang === 'pt' ? '/' : '/en/';
+const canonical = new URL(path, profile.site).href;
+---
+
+<!doctype html>
+<html lang={lang === 'pt' ? 'pt-BR' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Ativa os estados iniciais das animações antes da primeira pintura, evitando piscadas
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('js-motion');
+      }
+    </script>
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="theme-color" content="#0a0c0f" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="pt-BR" href={new URL('/', profile.site).href} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', profile.site).href} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', profile.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: profile.fullName,
+      alternateName: profile.name,
+      jobTitle: lang === 'pt' ? 'Analista de Cloud Júnior (em formação)' : 'Aspiring Junior Cloud Analyst',
+      email: `mailto:${profile.email}`,
+      url: profile.site,
+      sameAs: [profile.linkedin, profile.github],
+      address: { '@type': 'PostalAddress', addressLocality: 'São Paulo', addressCountry: 'BR' },
+    })} />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">{t.nav.skip}</a>
+    <slot />
+    <div class="grain" aria-hidden="true"></div>
+  </body>
+</html>

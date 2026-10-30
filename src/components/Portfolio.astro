@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Journey from './Journey.astro';
+import Skills from './Skills.astro';
+import Labs from './Labs.astro';
+import Status from './Status.astro';
+import Background from './Background.astro';
+import Contact from './Contact.astro';
+import type { Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<Base lang={lang}>
+  <Header lang={lang} />
+  <main>
+    <Journey lang={lang} />
+    <div class="after">
+      <Skills lang={lang} />
+      <Labs lang={lang} />
+      <Status lang={lang} />
+      <Background lang={lang} />
+    </div>
+  </main>
+  <Contact lang={lang} />
+</Base>
+
+<script>
+  import '../scripts/main';
+</script>
+
+<style>
+  .after {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+  }
+</style>

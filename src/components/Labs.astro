@@ -1,0 +1,164 @@
+---
+import { content, profile, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang].labs;
+---
+
+<section class="section labs" id="laboratorios" aria-labelledby="labs-title">
+  <div class="wrap">
+    <div class="section-head labs__head">
+      <p class="eyebrow mono" data-reveal>{t.eyebrow}</p>
+      <h2 class="h2" id="labs-title" data-reveal>{t.title}</h2>
+      <p class="labs__intro" data-reveal>{t.intro}</p>
+    </div>
+
+    <div class="lab-list">
+      {t.items.map((lab) => (
+        <article class="lab" data-reveal>
+          <div class="lab__media">
+            <img src={lab.image} alt={`${t.placeholder} — ${lab.title}`} width="1200" height="750" loading="lazy" decoding="async" />
+            <span class="lab__code mono">{lab.code}</span>
+          </div>
+
+          <div class="lab__body">
+            <h3 class="lab__title">{lab.title}</h3>
+            <dl class="lab__steps">
+              <div><dt class="mono">{t.steps[0]}</dt><dd>{lab.goal}</dd></div>
+              <div><dt class="mono">{t.steps[1]}</dt><dd>{lab.arch}</dd></div>
+              <div><dt class="mono">{t.steps[2]}</dt><dd>{lab.impl}</dd></div>
+              <div><dt class="mono">{t.steps[3]}</dt><dd>{lab.result}</dd></div>
+            </dl>
+            <ul class="lab__stack" role="list">
+              {lab.stack.map((s) => <li class="mono">{s}</li>)}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <a class="btn labs__repo" href={profile.github} target="_blank" rel="noopener noreferrer" data-reveal>
+      {t.repo}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .labs__intro {
+    max-width: 56ch;
+    color: var(--text-muted);
+    font-size: var(--fs-lead);
+  }
+
+  .lab-list {
+    display: grid;
+    gap: clamp(3.5rem, 2rem + 4vw, 6rem);
+  }
+
+  .lab {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+    align-items: start;
+  }
+
+  .lab:nth-child(even) .lab__media {
+    order: 2;
+  }
+
+  .lab__media {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+
+  .lab__media img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .lab__code {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+    padding: 0.3rem 0.55rem;
+    background: rgb(10 12 15 / 0.8);
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .lab__title {
+    font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+    font-weight: 800;
+    font-stretch: 75%;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .lab__steps {
+    display: grid;
+    gap: 1rem;
+    margin: 1.75rem 0 0;
+  }
+
+  .lab__steps div {
+    display: grid;
+    grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .lab__steps dt {
+    color: var(--ice);
+    padding-top: 0.2rem;
+  }
+
+  .lab__steps dd {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.975rem;
+  }
+
+  .lab__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin-top: 1.5rem;
+    color: var(--text-faint);
+  }
+
+  .lab__stack li::before {
+    content: '/ ';
+    color: var(--accent);
+  }
+
+  .labs__repo {
+    margin-top: clamp(3rem, 2rem + 3vw, 5rem);
+  }
+
+  @media (max-width: 900px) {
+    .lab {
+      grid-template-columns: 1fr;
+    }
+
+    .lab:nth-child(even) .lab__media {
+      order: 0;
+    }
+
+    .lab__steps div {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

@@ -1,0 +1,147 @@
+---
+import { content, profile, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang];
+const year = new Date().getFullYear();
+---
+
+<section class="section contact" id="contato" aria-labelledby="contact-title">
+  <div class="wrap">
+    <p class="eyebrow mono" data-reveal>{t.contact.eyebrow}</p>
+    <h2 class="contact__title" id="contact-title" data-reveal>{t.contact.title}</h2>
+
+    <div class="contact__grid">
+      <p class="contact__text" data-reveal>{t.contact.text}</p>
+
+      <div class="contact__links" data-reveal>
+        <a class="contact__mail" href={`mailto:${profile.email}`}>
+          {profile.email}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg>
+        </a>
+        <ul class="contact__list" role="list">
+          <li><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href={profile.resume} download>{t.contact.resume}</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <p class="mono">© {year} {profile.fullName}</p>
+    <p class="mono footer__built">{t.footer.built}</p>
+    <a class="mono footer__top" href="#conteudo">{t.footer.top} ↑</a>
+  </div>
+</footer>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--line);
+    background: radial-gradient(70% 60% at 85% 100%, rgb(95 227 232 / 0.07), transparent 70%);
+  }
+
+  .contact__title {
+    max-width: 19ch;
+    margin-top: 1.5rem;
+    font-size: clamp(3rem, 1.5rem + 7vw, 8.5rem);
+    font-weight: 850;
+    font-stretch: 68%;
+    line-height: 0.88;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 2rem 4rem;
+    margin-top: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .contact__text {
+    max-width: 44ch;
+    color: var(--text-muted);
+    font-size: var(--fs-lead);
+  }
+
+  .contact__mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: clamp(1.35rem, 0.9rem + 2vw, 2.4rem);
+    font-weight: 650;
+    color: var(--accent);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    border-bottom: 1px solid rgb(95 227 232 / 0.35);
+    transition: border-color var(--dur-fast) ease;
+  }
+
+  .contact__mail:hover {
+    border-color: var(--accent);
+  }
+
+  .contact__mail svg {
+    width: 0.8em;
+    height: 0.8em;
+    flex: none;
+  }
+
+  .contact__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .contact__list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text);
+  }
+
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: 1.75rem;
+    color: var(--text-faint);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 2rem;
+  }
+
+  .footer__built {
+    margin-right: auto;
+  }
+
+  .footer__top {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .footer__top:hover {
+    color: var(--text);
+  }
+
+  @media (max-width: 900px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

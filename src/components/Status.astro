@@ -1,0 +1,280 @@
+---
+import { content, type Lang } from '../data/content';
+import { status } from '../data/status';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = content[lang].status;
+
+const maxWeek = Math.max(...status.weeklyHours, 1);
+const ring = (pct: number) => {
+  const c = 2 * Math.PI * 42;
+  return { c, offset: c * (1 - pct / 100) };
+};
+const cert = ring(status.certProgress);
+const restart = ring(status.restartProgress);
+---
+
+<section class="section status" aria-labelledby="status-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow mono" data-reveal>{t.eyebrow}</p>
+      <h2 class="h2" id="status-title" data-reveal>{t.title}</h2>
+    </div>
+
+    <div class="panel" data-reveal data-status-panel>
+      <div class="panel__bar mono">
+        <span class="panel__dot" aria-hidden="true"></span>
+        <span>dashboard / thiago-alexandre</span>
+        {status.sample && <span class="panel__sample">{t.sampleNote}</span>}
+      </div>
+
+      <div class="grid">
+        <div class="tile">
+          <p class="tile__label mono">{t.labels.labs}</p>
+          <p class="tile__value" data-count={status.labsDone}>{status.labsDone}</p>
+          <p class="tile__state mono"><span class="ok" aria-hidden="true"></span>{t.ok}</p>
+        </div>
+
+        <div class="tile">
+          <p class="tile__label mono">{t.labels.hours}</p>
+          <p class="tile__value" data-count={status.handsOnHours}>{status.handsOnHours}<span>h</span></p>
+        </div>
+
+        <div class="tile">
+          <p class="tile__label mono">{t.labels.uptime}</p>
+          <p class="tile__value" data-count={status.streakDays}>{status.streakDays}</p>
+        </div>
+
+        <div class="tile tile--ring">
+          <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="42" class="ring__track" />
+            <circle cx="50" cy="50" r="42" class="ring__fill" stroke-dasharray={cert.c} stroke-dashoffset={cert.offset} data-ring={cert.offset} data-ring-len={cert.c} />
+          </svg>
+          <div>
+            <p class="tile__label mono">{t.labels.cert}</p>
+            <p class="tile__value tile__value--sm"><span data-count={status.certProgress}>{status.certProgress}</span>%</p>
+            <p class="tile__state mono"><span class="warn" aria-hidden="true"></span>{t.inProgress}</p>
+          </div>
+        </div>
+
+        <div class="tile tile--ring">
+          <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="42" class="ring__track" />
+            <circle cx="50" cy="50" r="42" class="ring__fill" stroke-dasharray={restart.c} stroke-dashoffset={restart.offset} data-ring={restart.offset} data-ring-len={restart.c} />
+          </svg>
+          <div>
+            <p class="tile__label mono">{t.labels.restart}</p>
+            <p class="tile__value tile__value--sm"><span data-count={status.restartProgress}>{status.restartProgress}</span>%</p>
+          </div>
+        </div>
+
+        <div class="tile tile--chart">
+          <p class="tile__label mono">{t.labels.weekly}</p>
+          <ol class="bars" role="list">
+            {status.weeklyHours.map((h, i) => (
+              <li style={`--h:${(h / maxWeek) * 100}%`}>
+                <span class="bars__bar" data-bar></span>
+                <span class="bars__val mono">{h}h</span>
+                <span class="visually-hidden">{lang === 'pt' ? `Semana ${i + 1}: ${h} horas` : `Week ${i + 1}: ${h} hours`}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--bg-raised), var(--bg));
+    overflow: hidden;
+  }
+
+  .panel__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--text-faint);
+  }
+
+  .panel__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 10px var(--ok);
+  }
+
+  .panel__sample {
+    margin-left: auto;
+    padding: 0.2rem 0.55rem;
+    border: 1px dashed var(--warn);
+    border-radius: 3px;
+    color: var(--warn);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .tile {
+    grid-column: span 2;
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tile:nth-child(3),
+  .tile--chart {
+    border-right: 0;
+  }
+
+  .tile--ring {
+    grid-column: span 3;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .tile--ring:nth-child(5) {
+    border-right: 0;
+  }
+
+  .tile--chart {
+    grid-column: span 6;
+    border-bottom: 0;
+  }
+
+  .tile__label {
+    color: var(--text-muted);
+  }
+
+  .tile__value {
+    font-size: clamp(3rem, 2rem + 3vw, 4.75rem);
+    font-weight: 800;
+    font-stretch: 72%;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tile__value span {
+    font-size: 0.45em;
+    color: var(--text-muted);
+    margin-left: 0.1em;
+  }
+
+  .tile__value--sm {
+    font-size: clamp(2.25rem, 1.75rem + 1.5vw, 3rem);
+  }
+
+  .tile__value--sm span[data-count] {
+    font-size: inherit;
+    color: inherit;
+    margin: 0;
+  }
+
+  .tile__state {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+  }
+
+  .ok,
+  .warn {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+  }
+
+  .warn {
+    background: var(--warn);
+  }
+
+  .ring {
+    width: clamp(84px, 9vw, 112px);
+    transform: rotate(-90deg);
+  }
+
+  .ring__track,
+  .ring__fill {
+    fill: none;
+    stroke-width: 5;
+  }
+
+  .ring__track {
+    stroke: var(--line);
+  }
+
+  .ring__fill {
+    stroke: var(--accent);
+    stroke-linecap: round;
+  }
+
+  .bars {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    align-items: end;
+    gap: clamp(0.4rem, 1vw, 1rem);
+    height: 180px;
+    margin-top: 1.5rem;
+    padding: 0;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .bars li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .bars__bar {
+    display: block;
+    height: var(--h);
+    background: linear-gradient(180deg, var(--accent), rgb(95 227 232 / 0.15));
+    border-radius: 2px 2px 0 0;
+    transform-origin: bottom;
+  }
+
+  .bars li:last-child .bars__bar {
+    background: linear-gradient(180deg, var(--ice), rgb(188 216 234 / 0.2));
+  }
+
+  .bars__val {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--h) + 0.4rem);
+    transform: translateX(-50%);
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .tile,
+    .tile--ring {
+      grid-column: span 6;
+      border-right: 0;
+    }
+
+    .bars__val {
+      display: none;
+    }
+  }
+</style>
