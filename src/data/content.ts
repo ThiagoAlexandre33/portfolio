@@ -97,13 +97,38 @@ const pt = {
     eyebrow: 'Laboratórios',
     title: 'Ambientes que montei, testei e documentei.',
     intro:
-      'Laboratórios do AWS re/Start. Cada um segue o mesmo roteiro: objetivo, arquitetura, implementação e resultado.',
+      'Laboratórios feitos em conta própria e no AWS re/Start. Cada um segue o mesmo roteiro: objetivo, arquitetura, implementação e resultado.',
     steps: ['Objetivo', 'Arquitetura', 'Implementação', 'Resultado'],
     placeholder: 'Captura de tela em breve',
     repo: 'Ver no GitHub',
+    troubleshoot: { title: 'Problema → solução', issue: 'Problema', cause: 'Diagnóstico', fix: 'Solução' },
+    evidence: 'Evidências',
     items: [
       {
         code: 'LAB_01',
+        title: 'Banco Aurora sem servidor',
+        date: 'out/2026',
+        goal: 'Criar um banco Aurora PostgreSQL 17 sem servidor no plano gratuito da AWS.',
+        arch: 'Cluster Aurora PostgreSQL em us-east-2 · instância sem servidor de 0 a 4 ACU · autenticação IAM por token · criptografia em repouso com chave do KMS.',
+        impl: 'Diagnóstico da falha no IAM, criação da role rds-monitoring-role e criação do cluster pela AWS CLI no CloudShell.',
+        result: 'Cluster "available" validado pela CLI e pelo console. Todos os recursos apagados no fim, sem snapshot final; custo coberto pelos créditos do Free Tier.',
+        problem: {
+          issue: 'A criação pelo console falhava com "Falha ao ativar o Enhanced Monitoring… Timeout occurred while waiting for a reply".',
+          cause: 'A role de serviço rds-monitoring-role não existia. Criei a role no IAM, mas o erro se repetiu: o timeout estava no próprio fluxo do console.',
+          fix: 'Criei o cluster pela AWS CLI (--with-express-configuration), que não passa pelo passo que travava.',
+        },
+        stack: ['Aurora PostgreSQL', 'IAM', 'AWS CLI', 'CloudShell'],
+        image: '/labs/aurora/cli-create.png',
+        imageAlt: 'CloudShell com o comando aws rds create-db-cluster e o status "creating"',
+        gallery: [
+          { src: '/labs/aurora/erro-console.png', alt: 'Erro do console: falha ao ativar o Enhanced Monitoring' },
+          { src: '/labs/aurora/role-iam.png', alt: 'Role rds-monitoring-role criada no IAM com a política AmazonRDSEnhancedMonitoringRole' },
+          { src: '/labs/aurora/disponivel.png', alt: 'Cluster database-1 e instância com status Disponível no console' },
+          { src: '/labs/aurora/limpeza.png', alt: 'Lista de bancos vazia após a limpeza dos recursos' },
+        ],
+      },
+      {
+        code: 'LAB_02',
         title: 'Rede própria na AWS',
         goal: 'Criar uma VPC isolada com sub-redes pública e privada.',
         arch: 'VPC 10.0.0.0/16 · sub-rede pública 10.0.1.0/24 · privada 10.0.2.0/24 · Internet Gateway · tabelas de rotas.',
@@ -113,7 +138,7 @@ const pt = {
         image: '/labs/lab-01.svg',
       },
       {
-        code: 'LAB_02',
+        code: 'LAB_03',
         title: 'Servidor web em EC2',
         goal: 'Publicar uma página em uma instância Linux.',
         arch: 'EC2 Amazon Linux em sub-rede pública · Security Group liberando SSH (22) e HTTP (80).',
@@ -123,7 +148,7 @@ const pt = {
         image: '/labs/lab-02.svg',
       },
       {
-        code: 'LAB_03',
+        code: 'LAB_04',
         title: 'Segurança e monitoramento',
         goal: 'Controlar acessos e reagir a uso anormal de CPU.',
         arch: 'Usuários e políticas IAM · chave KMS para criptografia · alarme CloudWatch sobre CPUUtilization.',
@@ -295,13 +320,39 @@ const en: Content = {
   labs: {
     eyebrow: 'Labs',
     title: 'Environments I built, tested and documented.',
-    intro: 'AWS re/Start labs. Each one follows the same path: goal, architecture, implementation and result.',
+    intro:
+      'Labs done in my own AWS account and in AWS re/Start. Each one follows the same path: goal, architecture, implementation and result.',
     steps: ['Goal', 'Architecture', 'Implementation', 'Result'],
     placeholder: 'Screenshot coming soon',
     repo: 'View on GitHub',
+    troubleshoot: { title: 'Problem → solution', issue: 'Problem', cause: 'Diagnosis', fix: 'Solution' },
+    evidence: 'Evidence',
     items: [
       {
         code: 'LAB_01',
+        title: 'Serverless Aurora database',
+        date: 'Oct 2026',
+        goal: 'Create a serverless Aurora PostgreSQL 17 database on the AWS free plan.',
+        arch: 'Aurora PostgreSQL cluster in us-east-2 · serverless instance from 0 to 4 ACU · IAM token authentication · encryption at rest with a KMS key.',
+        impl: 'Diagnosed the failure in IAM, created the rds-monitoring-role service role and created the cluster with the AWS CLI in CloudShell.',
+        result: 'Cluster "available" validated in the CLI and the console. All resources deleted at the end, with no final snapshot; cost covered by Free Tier credits.',
+        problem: {
+          issue: 'Creating the database in the console failed with "Failed to enable Enhanced Monitoring… Timeout occurred while waiting for a reply".',
+          cause: 'The rds-monitoring-role service role did not exist. I created it in IAM, but the error came back: the timeout was in the console flow itself.',
+          fix: 'I created the cluster with the AWS CLI (--with-express-configuration), which skips the step that was hanging.',
+        },
+        stack: ['Aurora PostgreSQL', 'IAM', 'AWS CLI', 'CloudShell'],
+        image: '/labs/aurora/cli-create.png',
+        imageAlt: 'CloudShell running aws rds create-db-cluster with status "creating"',
+        gallery: [
+          { src: '/labs/aurora/erro-console.png', alt: 'Console error: failed to enable Enhanced Monitoring' },
+          { src: '/labs/aurora/role-iam.png', alt: 'rds-monitoring-role created in IAM with the AmazonRDSEnhancedMonitoringRole policy' },
+          { src: '/labs/aurora/disponivel.png', alt: 'database-1 cluster and instance with status Available in the console' },
+          { src: '/labs/aurora/limpeza.png', alt: 'Empty database list after cleaning up the resources' },
+        ],
+      },
+      {
+        code: 'LAB_02',
         title: 'My own network on AWS',
         goal: 'Create an isolated VPC with public and private subnets.',
         arch: 'VPC 10.0.0.0/16 · public subnet 10.0.1.0/24 · private 10.0.2.0/24 · Internet Gateway · route tables.',
@@ -311,7 +362,7 @@ const en: Content = {
         image: '/labs/lab-01.svg',
       },
       {
-        code: 'LAB_02',
+        code: 'LAB_03',
         title: 'Web server on EC2',
         goal: 'Publish a page from a Linux instance.',
         arch: 'Amazon Linux EC2 in a public subnet · Security Group allowing SSH (22) and HTTP (80).',
@@ -321,7 +372,7 @@ const en: Content = {
         image: '/labs/lab-02.svg',
       },
       {
-        code: 'LAB_03',
+        code: 'LAB_04',
         title: 'Security and monitoring',
         goal: 'Control access and react to abnormal CPU usage.',
         arch: 'IAM users and policies · KMS key for encryption · CloudWatch alarm on CPUUtilization.',

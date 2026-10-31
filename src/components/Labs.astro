@@ -20,12 +20,32 @@ const t = content[lang].labs;
     <div class="lab-list">
       {t.items.map((lab) => (
         <article class="lab" data-reveal>
-          <div class="lab__media">
-            <img src={lab.image} alt={`${t.placeholder} — ${lab.title}`} width="1200" height="750" loading="lazy" decoding="async" />
-            <span class="lab__code mono">{lab.code}</span>
+          <div class="lab__visual">
+            <div class="lab__media">
+              <a href={lab.image} target="_blank" rel="noopener">
+                <img src={lab.image} alt={'imageAlt' in lab && lab.imageAlt ? lab.imageAlt : `${t.placeholder} — ${lab.title}`} width="1200" height="750" loading="lazy" decoding="async" />
+              </a>
+              <span class="lab__code mono">{lab.code}</span>
+            </div>
+
+            {'gallery' in lab && lab.gallery && (
+              <div class="lab__gallery">
+                <p class="lab__gallery-title mono">{t.evidence}</p>
+                <ul role="list">
+                  {lab.gallery.map((g) => (
+                    <li>
+                      <a href={g.src} target="_blank" rel="noopener">
+                        <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <div class="lab__body">
+            {'date' in lab && lab.date && <p class="lab__date mono">{lab.date}</p>}
             <h3 class="lab__title">{lab.title}</h3>
             <dl class="lab__steps">
               <div><dt class="mono">{t.steps[0]}</dt><dd>{lab.goal}</dd></div>
@@ -33,6 +53,17 @@ const t = content[lang].labs;
               <div><dt class="mono">{t.steps[2]}</dt><dd>{lab.impl}</dd></div>
               <div><dt class="mono">{t.steps[3]}</dt><dd>{lab.result}</dd></div>
             </dl>
+
+            {'problem' in lab && lab.problem && (
+              <div class="fix">
+                <p class="fix__title mono">{t.troubleshoot.title}</p>
+                <ol class="fix__list" role="list">
+                  <li><span class="fix__k mono fix__k--bad">{t.troubleshoot.issue}</span><p>{lab.problem.issue}</p></li>
+                  <li><span class="fix__k mono">{t.troubleshoot.cause}</span><p>{lab.problem.cause}</p></li>
+                  <li><span class="fix__k mono fix__k--good">{t.troubleshoot.fix}</span><p>{lab.problem.fix}</p></li>
+                </ol>
+              </div>
+            )}
             <ul class="lab__stack" role="list">
               {lab.stack.map((s) => <li class="mono">{s}</li>)}
             </ul>
@@ -67,8 +98,87 @@ const t = content[lang].labs;
     align-items: start;
   }
 
-  .lab:nth-child(even) .lab__media {
+  .lab:nth-child(even) .lab__visual {
     order: 2;
+  }
+
+  .lab__visual {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .lab__gallery-title {
+    margin-bottom: 0.6rem;
+    color: var(--text-faint);
+  }
+
+  .lab__gallery ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .lab__gallery a {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color var(--dur-fast) ease;
+  }
+
+  .lab__gallery a:hover {
+    border-color: var(--accent);
+  }
+
+  .lab__gallery img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: top left;
+  }
+
+  .lab__date {
+    margin-bottom: 0.6rem;
+    color: var(--text-faint);
+  }
+
+  .fix {
+    margin-top: 1.75rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line-strong);
+    border-left: 2px solid var(--accent);
+    border-radius: 3px;
+    background: rgb(95 227 232 / 0.03);
+  }
+
+  .fix__title {
+    color: var(--accent);
+  }
+
+  .fix__list {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fix__list p {
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .fix__k {
+    color: var(--ice);
+  }
+
+  .fix__k--bad {
+    color: #f29a8a;
+  }
+
+  .fix__k--good {
+    color: var(--ok);
   }
 
   .lab__media {
@@ -84,6 +194,7 @@ const t = content[lang].labs;
     height: auto;
     aspect-ratio: 16 / 10;
     object-fit: cover;
+    object-position: top left;
   }
 
   .lab__code {
@@ -152,8 +263,12 @@ const t = content[lang].labs;
       grid-template-columns: 1fr;
     }
 
-    .lab:nth-child(even) .lab__media {
+    .lab:nth-child(even) .lab__visual {
       order: 0;
+    }
+
+    .lab__gallery ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .lab__steps div {
